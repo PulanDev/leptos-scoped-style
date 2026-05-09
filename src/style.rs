@@ -15,7 +15,7 @@ use crate::scope_id::ScopeId;
 /// # Examples
 ///
 /// ```rust
-/// use leptos_style::ComponentStyle;
+/// use leptos_scoped_style::ComponentStyle;
 ///
 /// // Plain CSS
 /// static BTN: ComponentStyle = ComponentStyle::css(

@@ -1,9 +1,9 @@
-# leptos-style
+# leptos-scoped-style
 
 Scoped CSS for [Leptos](https://leptos.dev/) with **emulated view encapsulation** (the same attribute-scoping approach Angular uses): styles apply only inside your component unless you deliberately opt out.
 
-[![crates.io](https://img.shields.io/crates/v/leptos-style.svg)](https://crates.io/crates/leptos-style)
-[![docs.rs](https://docs.rs/leptos-style/badge.svg)](https://docs.rs/leptos-style)
+[![crates.io](https://img.shields.io/crates/v/leptos-scoped-style.svg)](https://crates.io/crates/leptos-scoped-style)
+[![docs.rs](https://docs.rs/leptos-scoped-style/badge.svg)](https://docs.rs/leptos-scoped-style)
 [![repository](https://img.shields.io/badge/repo-GitHub-181717)](https://github.com/PulanDev/leptos-style)
 
 ## Why use this?
@@ -20,7 +20,7 @@ Compatible with **Leptos 0.8**.
 
 ```toml
 [dependencies]
-leptos-style = "0.1"
+leptos-scoped-style = "0.1"
 ```
 
 By default only plain CSS APIs are available (`ComponentStyle::css`, `global_css`). Enable **`scss_file`** when you want the `scss_file!` macro.
@@ -29,21 +29,21 @@ Optional feature:
 
 | Feature      | Enables |
 |--------------|---------|
-| `scss_file`  | Compile `.scss` files at **build** time (`scss_file!`), with `@use` / `@forward` relative to your crate root. Pulls in `leptos-style-macros`. |
+| `scss_file`  | Compile `.scss` files at **build** time (`scss_file!`), with `@use` / `@forward` relative to your crate root. Pulls in `leptos-scoped-style-macros`. |
 
 ```toml
-leptos-style = { version = "0.1", features = ["scss_file"] }
+leptos-scoped-style = { version = "0.1", features = ["scss_file"] }
 ```
 
 ## Quick start
 
-Declare one [`ComponentStyle`](https://docs.rs/leptos-style/latest/leptos_style/struct.ComponentStyle.html) per component module (typically a `static`), then wrap markup in [`Scoped`](https://docs.rs/leptos-style/latest/leptos_style/component/fn.Scoped.html).
+Declare one [`ComponentStyle`](https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/struct.ComponentStyle.html) per component module (typically a `static`), then wrap markup in [`Scoped`](https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/component/fn.Scoped.html).
 
 The `class` argument sets the CSS **class attribute on the scope host** (the wrapper element, or the root element in directive mode).
 
 ```rust
 use leptos::prelude::*;
-use leptos_style::{ComponentStyle, Scoped};
+use leptos_scoped_style::{ComponentStyle, Scoped};
 
 static MY_BUTTON: ComponentStyle = ComponentStyle::css(
     "my-button", // unique name in your app — used to derive stable scope ids
@@ -81,14 +81,14 @@ Here `tag="mat-button"` becomes the boolean HTML attribute `mat-button=""` on th
 | Constructor | Scoped? | Notes |
 |-------------|---------|--------|
 | `css(name, css)` | Yes | Plain CSS string (`scss_file!` can produce the argument). |
-| `global_css(name, css)` | No | Inject as-is (`:root`, resets, tokens). Pair with [`GlobalStyles`](https://docs.rs/leptos-style/latest/leptos_style/component/fn.GlobalStyles.html). |
+| `global_css(name, css)` | No | Inject as-is (`:root`, resets, tokens). Pair with [`GlobalStyles`](https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/component/fn.GlobalStyles.html). |
 | `scss_file!("path/to/file.scss")` *(feature `scss_file`)* | — | Macro expands to `&'static str` compiled CSS at build time. Path is relative to **`CARGO_MANIFEST_DIR`** of the invoking crate. |
 
 Example with compile-time Sass:
 
 ```rust
 #[cfg(feature = "scss_file")]
-use leptos_style::{scss_file, ComponentStyle, Scoped};
+use leptos_scoped_style::{scss_file, ComponentStyle, Scoped};
 
 #[cfg(feature = "scss_file")]
 static WIDGET_STYLES: ComponentStyle = ComponentStyle::css(
@@ -107,7 +107,7 @@ fn MyWidget() -> impl IntoView {
 }
 ```
 
-Use `ComponentStyle::global_css` plus one [`GlobalStyles`](https://docs.rs/leptos-style/latest/leptos_style/component/fn.GlobalStyles.html) near the app shell for **`:root`** and **universal** rules so they stay document-wide (use plain CSS strings, or precompile tokens with Sass in your crate if you prefer).
+Use `ComponentStyle::global_css` plus one [`GlobalStyles`](https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/component/fn.GlobalStyles.html) near the app shell for **`:root`** and **universal** rules so they stay document-wide (use plain CSS strings, or precompile tokens with Sass in your crate if you prefer).
 
 ```rust
 static TOKENS: ComponentStyle =
@@ -120,7 +120,7 @@ view! { <GlobalStyles style=&TOKENS /> }
 ## How it works (short)
 
 1. On first mount of a style, the crate **rewrites** your CSS: most selectors gain a `[_leptoscontent-{id}]` attribute selector; `:host`-style patterns map to `[_leptoshost-{id}]`.
-2. A **`<style id="leptos-style-{id}">`** is appended to **`document.head`** (browser) or rendered via **`leptos_meta::Style`** (SSR).
+2. A **`<style id="leptos-scoped-style-{id}">`** is appended to **`document.head`** (browser) or rendered via **`leptos_meta::Style`** (SSR).
 3. The **host** element gets **`_leptoshost-{id}`**; **descendants** get **`_leptoscontent-{id}`** in the DOM (Wasm), with recursion stopping at nested [`Scoped`] hosts and **`_leptosslot`** boundaries.
 4. A **reference count** tracks live instances; when it hits zero, the client **removes** the `<style>` node.
 
@@ -151,7 +151,7 @@ At-rules such as `@media` are passed through while **their inner** rule selector
 
 ## Non-`Send` children
 
-[`Scoped`](https://docs.rs/leptos-style/latest/leptos_style/component/fn.Scoped.html) uses **`ScopedChildren`**, which does **not** require `Send`. Event handlers captured in `<Scoped>...</Scoped>` therefore work without forcing `Send` on non-Wasm targets.
+[`Scoped`](https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/component/fn.Scoped.html) uses **`ScopedChildren`**, which does **not** require `Send`. Event handlers captured in `<Scoped>...</Scoped>` therefore work without forcing `Send` on non-Wasm targets.
 
 ## SSR and hydration
 
@@ -170,11 +170,11 @@ For crates.io conventions, consider adding matching `LICENSE-MIT` / `LICENSE-APA
 
 ## Publishing (maintainers)
 
-This repository ships two crates: **`leptos-style`** (library) and **`leptos-style-macros`** (proc-macros behind the `scss_file` feature). To publish both to [crates.io](https://crates.io):
+This repository ships two crates: **`leptos-scoped-style`** (library) and **`leptos-scoped-style-macros`** (proc-macros behind the `scss_file` feature). To publish both to [crates.io](https://crates.io):
 
-1. Publish **`leptos-style-macros`** first (`crates/leptos-style-macros`).
-2. In the root `Cargo.toml`, change the optional dependency from `path = "crates/leptos-style-macros"` to **`version = "…"`** matching what you published.
-3. Publish **`leptos-style`**.
+1. Publish **`leptos-scoped-style-macros`** first (`crates/leptos-scoped-style-macros`).
+2. In the root `Cargo.toml`, change the optional dependency from `path = "crates/leptos-scoped-style-macros"` to **`version = "…"`** matching what you published.
+3. Publish **`leptos-scoped-style`**.
 
 Add `LICENSE-MIT` and/or `LICENSE-APACHE` (or a single well-known boilerplate layout) matching `license = "MIT OR Apache-2.0"` in `Cargo.toml` before publishing — crates.io and downstream users expect them.
 

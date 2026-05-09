@@ -43,7 +43,7 @@ fn track_files_for_rerun(files: &HashSet<PathBuf>) -> TokenStream2 {
     let mut out = quote::quote!();
 
     for (idx, file) in files.iter().enumerate() {
-        let ident = format_ident!("__LEPTOS_STYLE_SCSS_DEP_{idx}");
+        let ident = format_ident!("__LEPTOS_SCOPED_STYLE_SCSS_DEP_{idx}");
         let file_name = file.to_string_lossy();
         out.extend::<TokenStream2>(quote::quote!(
             #[allow(dead_code)]
@@ -66,15 +66,15 @@ fn finish(css: String, files: &HashSet<PathBuf>) -> TokenStream {
 /// Compile a Sass/SCSS file to CSS and expand to a `&'static str` expression.
 ///
 /// `path` is joined with `CARGO_MANIFEST_DIR` from the crate that invokes this
-/// macro (the one currently being compiled), **not** the leptos-style crate.
+/// macro (the one currently being compiled), **not** the leptos-scoped-style crate.
 /// Use forward slashes in the literal (works on Windows too once joined).
 ///
-/// Typical usage with [`leptos_style::ComponentStyle::css`][css]:
+/// Typical usage with [`leptos_scoped_style::ComponentStyle::css`][css]:
 ///
-/// [css]: https://docs.rs/leptos-style/latest/leptos_style/struct.ComponentStyle.html#method.css
+/// [css]: https://docs.rs/leptos-scoped-style/latest/leptos_scoped_style/struct.ComponentStyle.html#method.css
 ///
 /// ```ignore
-/// use leptos_style::{ComponentStyle, scss_file};
+/// use leptos_scoped_style::{ComponentStyle, scss_file};
 ///
 /// static STYLES: ComponentStyle = ComponentStyle::css(
 ///     "my-widget",

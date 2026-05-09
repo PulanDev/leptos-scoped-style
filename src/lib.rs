@@ -1,11 +1,11 @@
-//! # leptos-style
+//! # leptos-scoped-style
 //!
 //! Scoped CSS for [Leptos](https://leptos.dev) components with emulated view
 //! encapsulation — the same technique used by Angular.
 //!
 //! ## How it works
 //!
-//! When a component mounts, `leptos-style`:
+//! When a component mounts, `leptos-scoped-style`:
 //!
 //! 1. **Rewrites CSS selectors** at first mount — every selector gets a unique
 //!    attribute appended (e.g. `button[_leptoscontent-c1a2b3c4]`), so styles
@@ -21,7 +21,7 @@
 //!
 //! ```rust,ignore
 //! use leptos::prelude::*;
-//! use leptos_style::{ComponentStyle, Scoped};
+//! use leptos_scoped_style::{ComponentStyle, Scoped};
 //!
 //! // Declare once per component — usually at the top of the module.
 //! static BTN: ComponentStyle = ComponentStyle::css(
@@ -49,11 +49,11 @@
 //! `@forward` resolve the same way as on-disk Sass in apps and library crates.
 //!
 //! ```toml
-//! leptos-style = { version = "0.1", features = ["scss_file"] }
+//! leptos-scoped-style = { version = "0.1", features = ["scss_file"] }
 //! ```
 //!
 //! ```rust,ignore
-//! use leptos_style::{ComponentStyle, scss_file, Scoped};
+//! use leptos_scoped_style::{ComponentStyle, scss_file, Scoped};
 //!
 //! static BTN: ComponentStyle = ComponentStyle::css(
 //!     "my-button",
@@ -105,7 +105,7 @@ pub use style::ComponentStyle;
 ///
 /// # Example
 /// ```rust,ignore
-/// use leptos_style::{ComponentStyle, scss_file};
+/// use leptos_scoped_style::{ComponentStyle, scss_file};
 ///
 /// static BTN: ComponentStyle = ComponentStyle::css(
 ///     "my-button",
@@ -113,4 +113,4 @@ pub use style::ComponentStyle;
 /// );
 /// ```
 #[cfg(feature = "scss_file")]
-pub use leptos_style_macros::scss_file;
+pub use leptos_scoped_style_macros::scss_file;

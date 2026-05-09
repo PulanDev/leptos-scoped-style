@@ -118,7 +118,7 @@ fn directive_host_view(
 ///
 /// On mount, this component:
 ///
-/// 1. Injects a `<style id="leptos-style-{id}">` into `<head>` (browser) or
+/// 1. Injects a `<style id="leptos-scoped-style-{id}">` into `<head>` (browser) or
 ///    emits a [`leptos_meta::Style`] element (SSR).
 /// 2. Sets `_leptoshost-{id}=""` on the host element — the wrapper, or (when
 ///    `is_directive` is `true`) the root element(s) of the child view.
@@ -148,7 +148,7 @@ fn directive_host_view(
 ///
 /// ```rust,ignore
 /// use leptos::prelude::*;
-/// use leptos_style::{ComponentStyle, Scoped};
+/// use leptos_scoped_style::{ComponentStyle, Scoped};
 ///
 /// static BTN: ComponentStyle = ComponentStyle::css(
 ///     "my-button",
@@ -198,7 +198,7 @@ pub fn Scoped(
     #[cfg(not(target_arch = "wasm32"))]
     {
         let css = style.scoped_css().to_owned();
-        let style_id = format!("leptos-style-{}", scope_id_str);
+        let style_id = format!("leptos-scoped-style-{}", scope_id_str);
         let _ = view! {
             <leptos_meta::Style id=style_id>
                 {css}
@@ -283,7 +283,7 @@ pub fn GlobalStyles(
     #[cfg(not(target_arch = "wasm32"))]
     {
         let css = style.scoped_css().to_owned();
-        let style_id = format!("leptos-style-{}", style.scope_id().as_str());
+        let style_id = format!("leptos-scoped-style-{}", style.scope_id().as_str());
         view! {
             <leptos_meta::Style id=style_id>
                 {css}

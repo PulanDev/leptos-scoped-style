@@ -10,7 +10,7 @@ thread_local! {
 
 /// Register a new mount of `style`.
 ///
-/// * On the **browser** (Wasm): injects a `<style id="leptos-style-{id}">` into
+/// * On the **browser** (Wasm): injects a `<style id="leptos-scoped-style-{id}">` into
 ///   `document.head` the first time this component type is mounted.
 /// * On the **server** (SSR): emits a [`leptos_meta::Style`] element, which
 ///   Leptos places in the `<head>` of the rendered HTML string.
@@ -55,19 +55,19 @@ pub(crate) fn release(scope_id_str: &str) {
 #[cfg(target_arch = "wasm32")]
 fn insert_style_element(id: &str, css: &str) {
     let Some(window)   = web_sys::window()   else {
-        web_sys::console::error_1(&"[leptos-style] no window".into());
+        web_sys::console::error_1(&"[leptos-scoped-style] no window".into());
         return;
     };
     let Some(document) = window.document()  else {
-        web_sys::console::error_1(&"[leptos-style] no document".into());
+        web_sys::console::error_1(&"[leptos-scoped-style] no document".into());
         return;
     };
     let Some(head) = document.head() else {
-        web_sys::console::error_1(&"[leptos-style] no <head>".into());
+        web_sys::console::error_1(&"[leptos-scoped-style] no <head>".into());
         return;
     };
 
-    let element_id = format!("leptos-style-{id}");
+    let element_id = format!("leptos-scoped-style-{id}");
 
     // Hydration guard: skip if SSR already injected this style.
     if document.get_element_by_id(&element_id).is_some() {
@@ -76,13 +76,13 @@ fn insert_style_element(id: &str, css: &str) {
 
     if css.is_empty() {
         web_sys::console::warn_1(
-            &format!("[leptos-style] scoped CSS for '{id}' is empty — check your SCSS for syntax errors").into()
+            &format!("[leptos-scoped-style] scoped CSS for '{id}' is empty — check your SCSS for syntax errors").into()
         );
         return;
     }
 
     let Ok(el) = document.create_element("style") else {
-        web_sys::console::error_1(&"[leptos-style] create_element('style') failed".into());
+        web_sys::console::error_1(&"[leptos-scoped-style] create_element('style') failed".into());
         return;
     };
 
@@ -100,7 +100,7 @@ fn remove_style_element(id: &str) {
     let Some(window)   = web_sys::window()   else { return };
     let Some(document) = window.document()   else { return };
 
-    let element_id = format!("leptos-style-{id}");
+    let element_id = format!("leptos-scoped-style-{id}");
     if let Some(el) = document.get_element_by_id(&element_id) {
         el.remove();
     }
