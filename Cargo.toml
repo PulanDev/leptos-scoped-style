@@ -20,7 +20,7 @@ scss_file = ["dep:leptos-style-macros"]
 [dependencies]
 leptos = { version = "0.8", default-features = false }
 leptos_meta = { version = "0.8", default-features = false }
-leptos-style-macros = { path = "crates/leptos-style-macros", optional = true }
+leptos-style-macros = { version = "0.1.0", optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 web-sys = { version = "0.3", features = [
