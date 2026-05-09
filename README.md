@@ -159,7 +159,7 @@ The server emits scoped CSS via `leptos_meta`; the Wasm client skips inserting a
 
 ## Contributing
 
-Issues and pull requests are welcome at [github.com/PulanDev/leptos-style](https://github.com/PulanDev/leptos-style).
+Issues and pull requests are welcome at [github.com/PulanDev/leptos-scoped-style](https://github.com/PulanDev/leptos-scoped-style).
 
 ## License
 
