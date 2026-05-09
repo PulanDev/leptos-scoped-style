@@ -1,0 +1,15 @@
+[package]
+name = "leptos-style-macros"
+version = "0.1.0"
+edition = "2024"
+description = "Proc macros for leptos-style (compile-time Sass)"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/PulanDev/leptos-style"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+grass_compiler = "0.13.4"
+quote = { version = "1", default-features = false }
+syn = { version = "2", default-features = false, features = ["full"] }
