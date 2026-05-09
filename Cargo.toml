@@ -1,0 +1,40 @@
+[package]
+name = "leptos-style"
+version = "0.1.0"
+edition = "2024"
+description = "Scoped CSS for Leptos components with emulated view encapsulation"
+license = "MIT OR Apache-2.0"
+keywords = ["leptos", "css", "scoped", "wasm", "encapsulation"]
+categories = ["wasm", "web-programming"]
+repository = "https://github.com/PulanDev/leptos-style"
+readme = "README.md"
+
+[lib]
+name = "leptos_style"
+path = "src/lib.rs"
+
+[features]
+default = []
+scss_file = ["dep:leptos-style-macros"]
+
+[dependencies]
+leptos = { version = "0.8", default-features = false }
+leptos_meta = { version = "0.8", default-features = false }
+leptos-style-macros = { path = "crates/leptos-style-macros", optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys = { version = "0.3", features = [
+    "Document",
+    "Window",
+    "HtmlElement",
+    "HtmlHeadElement",
+    "HtmlStyleElement",
+    "Element",
+    "HtmlCollection",
+    "NamedNodeMap",
+    "Attr",
+    "Node",
+    "Text",
+    "console",
+] }
+wasm-bindgen = "0.2"
