@@ -54,7 +54,7 @@ fn directive_host_view(
     inner: AnyView,
     host_attr: String,
     content_attr: Option<String>,
-    host_class: Option<String>,
+    host_class: Option<Signal<String>>,
     tag: &'static str,
 ) -> AnyView {
     use crate::dom::browser::tag_subtree;
@@ -95,7 +95,7 @@ fn directive_host_view(
 fn directive_host_view(
     inner: AnyView,
     host_attr: String,
-    host_class: Option<String>,
+    host_class: Option<Signal<String>>,
     tag: &'static str,
 ) -> AnyView {
     use leptos::attr::custom::custom_attribute;
@@ -175,8 +175,8 @@ fn directive_host_view(
 pub fn Scoped(
     /// The [`ComponentStyle`] static that describes this component's styles.
     style: &'static ComponentStyle,
-    #[prop(optional)]
-    class: Option<String>,
+    #[prop(optional, into)]
+    class: Option<Signal<String>>,
     /// HTML tag for the host wrapper element.
     ///
     /// Defaults to `"leptos-scope"`.  Use any valid custom-element name
@@ -229,14 +229,12 @@ pub fn Scoped(
 
             root.on_load(move |el| {
                 let _ = el.set_attribute(&ha, "");
-                if let Some(class) = class {
-                    let _ = el.set_class_name(&class);
-                }
                 tag_subtree(el.as_ref(), &ca);
             });
 
             html::custom(tag)
                 .attr("_leptosscope", "")
+                .class(class)
                 .node_ref(root)
                 .child(inner)
                 .into_any()
